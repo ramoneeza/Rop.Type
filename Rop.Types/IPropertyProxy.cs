@@ -4,6 +4,7 @@ namespace Rop.Types;
 
 public interface IPropertyProxy
 {
+    string Name { get; }
     PropertyInfo PropertyInfo { get; }
     ITypeProxy DeclaringClass { get; }
     bool IsNullAllowed { get; }

@@ -18,6 +18,7 @@ public class PropertyProxy : IPropertyProxy
     // Instance
     private readonly List<Attribute> _attributes;
     public PropertyInfo PropertyInfo { get; }
+    public string Name => PropertyInfo.Name;
     public ITypeProxy DeclaringClass { get; }
     public bool IsNullAllowed { get; }
     public ITypeProxy PropertyType { get; }
