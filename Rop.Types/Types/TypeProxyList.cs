@@ -28,6 +28,7 @@ public class TypeProxyList : ITypeProxy
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(baseType);
         IsReadOnly = lst == null;
+        IsNullAllowed = isnullallowed;
         HasEmptyConstructor = type.HasDefaultConstructor();
         if (isnullallowed)
             _defaultvalue = () => null;

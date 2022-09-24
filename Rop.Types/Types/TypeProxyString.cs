@@ -25,6 +25,7 @@ public class TypeProxyString : ITypeProxy
         TypeCode = Type.GetTypeCode(type);
         if (TypeCode != TypeCode.String) throw new ArgumentException($"Type {type} is not Enum");
         _defaultvalue = isnullallowed ? null : "";
+        IsNullAllowed = isnullallowed;
     }
     public override string ToString() => (BaseType == null) ? $"{Type.Name}{(IsNullAllowed ? "(?)" : "")}" : $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

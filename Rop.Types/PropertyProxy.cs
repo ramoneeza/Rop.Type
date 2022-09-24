@@ -8,13 +8,42 @@ public class PropertyProxy : IPropertyProxy
 {
     // Static
     private static readonly ConcurrentDictionary<PropertyInfo, IPropertyProxy> _dic = new();
-    public static IPropertyProxy? Get(PropertyInfo prop)
+    private static readonly ConcurrentDictionary<PropertyKey, IPropertyProxy?> _dicByKey = new();
+
+    public static IPropertyProxy Get(PropertyInfo prop)
     {
         if (_dic.TryGetValue(prop, out var value)) return value;
         value = new PropertyProxy(prop);
         _dic[prop] = value;
+        var pk=new PropertyKey(value);
+        _dicByKey[pk] = value;
         return value;
     }
+    public static IPropertyProxy? Get(Type type,string propertyname)
+    {
+        var pk = new PropertyKey(type, propertyname);
+        if (_dicByKey.TryGetValue(pk, out var value)) return value;
+        var prop = type.GetProperty(propertyname);
+        if (prop == null)
+        {
+            _dicByKey[pk] = null;
+            return null;
+        }
+        return Get(prop);
+    }
+    private record PropertyKey
+    {
+        public RuntimeTypeHandle Type { get; }
+        public string Name { get; }
+
+        public PropertyKey(Type type, string name)
+        {
+            Type = type.TypeHandle;
+            Name = name;
+        }
+        public PropertyKey(IPropertyProxy prop) : this(prop.DeclaringClass.Type, prop.Name){}
+    }
+
     // Instance
     private readonly List<Attribute> _attributes;
     public PropertyInfo PropertyInfo { get; }
@@ -27,10 +56,19 @@ public class PropertyProxy : IPropertyProxy
     public bool CanWrite { get; }
     public MethodInfo? Getter { get; }
     public MethodInfo? Setter { get; }
-
-    public Func<object,object?>? GetValue { get; }
-    public Action<object,object?>? SetValue { get; }
-
+    private Func<object,object?>? FnGetValue { get; }
+    private Action<object,object?>? ASetValue { get; }
+    public object? GetValue(object item)
+    {
+        if (FnGetValue is null) throw new Exception("No Getter");
+        return FnGetValue(item);
+    }
+    public void SetValue(object item,object? value)
+    {
+        if (ASetValue is null) throw new Exception("No Setter");
+        ASetValue(item,value);
+    }
+    
     private PropertyProxy(PropertyInfo pinfo)
     {
         PropertyInfo = pinfo;
@@ -44,11 +82,11 @@ public class PropertyProxy : IPropertyProxy
         CanWrite = pinfo.CanWrite;
         Getter = pinfo.GetMethod;
         Setter = pinfo.SetMethod;
-        GetValue = CreateGetter();
-        SetValue = CreateSetter();
+        FnGetValue = CreateGetter();
+        ASetValue = CreateSetter();
     }
 
-    private Action<object, object?> CreateSetter()
+    private Action<object, object?>? CreateSetter()
     {
         if (Setter is null) return null;
         var targetType = DeclaringClass;

@@ -10,6 +10,16 @@ namespace Rop.Types
             return (!pinfo.PropertyType.IsValueType && pinfo.GetCustomAttributes().Any(a => a.GetType().Name.Contains("NullableAttribute")))
                    || (Nullable.GetUnderlyingType(pinfo.PropertyType) != null);
         }
+        public static bool CanBeNullable(this MethodInfo pinfo)
+        {
+            return (!pinfo.ReturnType.IsValueType && pinfo.GetCustomAttributes().Any(a => a.GetType().Name.Contains("NullableAttribute")))
+                   || (Nullable.GetUnderlyingType(pinfo.ReturnType) != null);
+        }
+        public static bool CanBeNullable(this ParameterInfo pinfo)
+        {
+            return (!pinfo.ParameterType.IsValueType && pinfo.GetCustomAttributes().Any(a => a.GetType().Name.Contains("NullableAttribute")))
+                   || (Nullable.GetUnderlyingType(pinfo.ParameterType) != null);
+        }
         public static object? GetDefaultValue(this Type t)
         {
             if (t.IsValueType && Nullable.GetUnderlyingType(t) == null)

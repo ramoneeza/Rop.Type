@@ -14,6 +14,6 @@ public interface IPropertyProxy
     bool CanWrite { get; }
     MethodInfo? Getter { get; }
     MethodInfo? Setter { get; }
-    Func<object, object?>? GetValue { get; }
-    Action<object, object?>? SetValue { get; }
+    object? GetValue(object item);
+    void SetValue(object item, object? value);
 }
