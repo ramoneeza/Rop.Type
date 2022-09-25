@@ -2,7 +2,7 @@
 
 namespace Rop.Types;
 
-public interface IPropertyProxy
+public interface IPropertyProxy:IEquatable<IPropertyProxy>
 {
     string Name { get; }
     PropertyInfo PropertyInfo { get; }

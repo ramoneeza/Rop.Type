@@ -8,7 +8,7 @@
 	  <PackageTags>type;helpers</PackageTags>
 	  <Description>Type and Properties Helper</Description>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <Version>1.0.4</Version>
+	  <Version>1.0.5</Version>
 	  <Authors>Ramon Ordiales Plaza</Authors>
 	  <Company>Ramon Ordiales Plaza</Company>
 	  <Copyright>2022 Ramon Ordiales</Copyright>

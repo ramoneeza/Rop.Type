@@ -1,21 +1,21 @@
 ﻿namespace Rop.Types.Types;
 
-public class TypeProxyNullable : ITypeProxy
+public class TypeProxyNullable : AbsTypeProxy
 {
-    public Type Type { get; }
-    public ITypeProxy BaseType { get; }
-    public bool IsNullAllowed => true;
-    public bool IsBasicValueType => false;
-    public bool IsArray => false;
-    public bool IsNullable => true;
-    public bool IsList => false;
-    public bool IsEnumerable => false;
-    public bool IsEnum => false;
-    public bool IsString => false;
-    public bool HasEmptyConstructor => true;
-    public TypeCode TypeCode { get; }
-    public TypeType TypeType => TypeType.Nullable;
-    public object? GetDefaultValue() => null;
+    public override Type Type { get; }
+    public override ITypeProxy BaseType { get; }
+    public override bool IsNullAllowed => true;
+    public override bool IsBasicValueType => false;
+    public override bool IsArray => false;
+    public override bool IsNullable => true;
+    public override bool IsList => false;
+    public override bool IsEnumerable => false;
+    public override bool IsEnum => false;
+    public override bool IsString => false;
+    public override bool HasEmptyConstructor => true;
+    public override TypeCode TypeCode { get; }
+    public override TypeType TypeType => TypeType.Nullable;
+    public override object? GetDefaultValue() => null;
     public TypeProxyNullable(Type type, bool isnullallowed)
     {
         var subtype = Nullable.GetUnderlyingType(type);

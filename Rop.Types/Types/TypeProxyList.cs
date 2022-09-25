@@ -1,24 +1,24 @@
 ﻿namespace Rop.Types.Types;
 
-public class TypeProxyList : ITypeProxy
+public class TypeProxyList : AbsTypeProxy
 {
-    public Type Type { get; }
-    public ITypeProxy BaseType { get; }
-    public bool IsNullAllowed { get; }
-    public bool IsBasicValueType => false;
-    public bool IsArray => false;
-    public bool IsNullable => false;
-    public bool IsList => true;
-    public bool IsEnumerable => true;
-    public bool IsEnum => false;
-    public bool IsString => false;
-    public bool HasEmptyConstructor { get; }
+    public override Type Type { get; }
+    public override ITypeProxy BaseType { get; }
+    public override bool IsNullAllowed { get; }
+    public override bool IsBasicValueType => false;
+    public override bool IsArray => false;
+    public override bool IsNullable => false;
+    public override bool IsList => true;
+    public override bool IsEnumerable => true;
+    public override bool IsEnum => false;
+    public override bool IsString => false;
+    public override bool HasEmptyConstructor { get; }
     public bool IsReadOnly { get; }
-    public TypeCode TypeCode { get; }
-    public TypeType TypeType => TypeType.List;
+    public override TypeCode TypeCode { get; }
+    public override TypeType TypeType => TypeType.List;
     private readonly Func<object?> _defaultvalue;
-    private Type _primitivetype;
-    public object? GetDefaultValue() => _defaultvalue();
+    private readonly Type? _primitivetype=null;
+    public override object? GetDefaultValue() => _defaultvalue();
     public TypeProxyList(Type type, bool isnullallowed)
     {
         var lst = type.HasGenericInterface(typeof(IList<>));
@@ -29,12 +29,13 @@ public class TypeProxyList : ITypeProxy
         BaseType = TypeProxy.Get(baseType);
         IsReadOnly = lst == null;
         IsNullAllowed = isnullallowed;
-        HasEmptyConstructor = type.HasDefaultConstructor();
+        var hasEmptyConstructor = type.HasDefaultConstructor();
+        HasEmptyConstructor = hasEmptyConstructor;
         if (isnullallowed)
             _defaultvalue = () => null;
         else
         {
-            if (HasEmptyConstructor)
+            if (hasEmptyConstructor)
                 _defaultvalue = () => null;
             else
             {

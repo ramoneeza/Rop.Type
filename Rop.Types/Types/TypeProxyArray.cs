@@ -1,22 +1,22 @@
 ﻿namespace Rop.Types.Types;
 
-public class TypeProxyArray : ITypeProxy
+public class TypeProxyArray : AbsTypeProxy
 {
-    public Type Type { get; }
-    public ITypeProxy BaseType { get; }
-    public bool IsNullAllowed { get; }
-    public bool IsBasicValueType => false;
-    public bool IsArray => true;
-    public bool IsNullable => false;
-    public bool IsList => false;
-    public bool IsEnumerable => true;
-    public bool IsEnum => false;
-    public bool IsString => false;
-    public bool HasEmptyConstructor => false;
-    public TypeCode TypeCode { get; }
-    public TypeType TypeType => TypeType.Array;
+    public override Type Type { get; }
+    public override ITypeProxy BaseType { get; }
+    public override bool IsNullAllowed { get; }
+    public override bool IsBasicValueType => false;
+    public override bool IsArray => true;
+    public override bool IsNullable => false;
+    public override bool IsList => false;
+    public override bool IsEnumerable => true;
+    public override bool IsEnum => false;
+    public override bool IsString => false;
+    public override bool HasEmptyConstructor => false;
+    public override TypeCode TypeCode { get; }
+    public override TypeType TypeType => TypeType.Array;
     private readonly object? _defaultvalue;
-    public object? GetDefaultValue() => IsNullAllowed ? null : Array.CreateInstance(BaseType.Type, 0);
+    public override object? GetDefaultValue() => IsNullAllowed ? null : Array.CreateInstance(BaseType.Type, 0);
     public TypeProxyArray(Type type, bool isnullallowed)
     {
         if (!type.IsArray) throw new ArgumentException($"Type {type} is not Array");
@@ -29,4 +29,5 @@ public class TypeProxyArray : ITypeProxy
 
     }
     public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
+
 }

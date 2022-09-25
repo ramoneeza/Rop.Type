@@ -2,28 +2,29 @@
 
 namespace Rop.Types.Types;
 
-public class TypeProxyString : ITypeProxy
+public class TypeProxyString : AbsTypeProxy
 {
-    public Type Type { get; }
-    public ITypeProxy? BaseType => null;
-    public bool IsNullAllowed { get; }
-    public bool IsBasicValueType => false;
-    public bool IsArray => false;
-    public bool IsNullable => false;
-    public bool IsList => false;
-    public bool IsEnumerable => false;
-    public bool IsEnum => false;
-    public bool IsString => true;
-    public bool HasEmptyConstructor => true;
-    public TypeCode TypeCode { get; }
-    public TypeType TypeType => TypeType.String;
+    public override Type Type { get; }
+    public override ITypeProxy? BaseType => null;
+    public override bool IsNullAllowed { get; }
+    public override bool IsBasicValueType => false;
+    public override bool IsArray => false;
+    public override bool IsNullable => false;
+    public override bool IsList => false;
+    public override bool IsEnumerable => false;
+    public override bool IsEnum => false;
+    public override bool IsString => true;
+    public override bool HasEmptyConstructor => true;
+    public override TypeCode TypeCode { get; }
+    public override TypeType TypeType => TypeType.String;
     private readonly object? _defaultvalue;
-    public object? GetDefaultValue() => _defaultvalue;
+    public override object? GetDefaultValue() => _defaultvalue;
     public TypeProxyString(Type type, bool isnullallowed)
     {
         Type = type;
-        TypeCode = Type.GetTypeCode(type);
-        if (TypeCode != TypeCode.String) throw new ArgumentException($"Type {type} is not Enum");
+        var typeCode = Type.GetTypeCode(type);
+        if (typeCode != TypeCode.String) throw new ArgumentException($"Type {type} is not String");
+        TypeCode = typeCode;
         _defaultvalue = isnullallowed ? null : "";
         IsNullAllowed = isnullallowed;
     }

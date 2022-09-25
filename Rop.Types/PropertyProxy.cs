@@ -113,6 +113,25 @@ public class PropertyProxy : IPropertyProxy
         return action;
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals(obj as IPropertyProxy);
+    }
+
+    public override int GetHashCode()
+    {
+        return PropertyInfo.GetHashCode();
+    }
+    
+    public bool Equals(IPropertyProxy? other)
+    {
+        if (other is null) return false;
+        return (this.PropertyInfo == other.PropertyInfo);
+    }
+
     public override string ToString()
     {
         return $"{PropertyInfo.Name}:{PropertyType}";
