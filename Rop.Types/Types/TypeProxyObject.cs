@@ -17,6 +17,8 @@ public class TypeProxyObject : AbsTypeProxy
     public override TypeType TypeType => TypeType.Object;
     private readonly Func<object?> _defaultvalue;
     public override object? GetDefaultValue() => _defaultvalue();
+    public override string FriendlyName { get; }
+
     public TypeProxyObject(Type type, bool isnullallowed)
     {
         Type = type;
@@ -35,6 +37,7 @@ public class TypeProxyObject : AbsTypeProxy
                 _defaultvalue = () => null; // Can't do nothing more
             }
         }
+        FriendlyName = Type.Name;
     }
     public override string ToString() => (BaseType == null) ? $"{Type.Name}{(IsNullAllowed ? "(?)" : "")}" : $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

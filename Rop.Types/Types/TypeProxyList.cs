@@ -3,7 +3,8 @@
 public class TypeProxyList : AbsTypeProxy
 {
     public override Type Type { get; }
-    public override ITypeProxy BaseType { get; }
+    public override string FriendlyName { get; }
+    public sealed override ITypeProxy BaseType { get; }
     public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
@@ -31,6 +32,10 @@ public class TypeProxyList : AbsTypeProxy
         IsNullAllowed = isnullallowed;
         var hasEmptyConstructor = type.HasDefaultConstructor();
         HasEmptyConstructor = hasEmptyConstructor;
+
+        FriendlyName = (baseType == lst) ? $"List<{BaseType.FriendlyName}>" : $"ReadOnlyList<{BaseType.FriendlyName}>";
+
+
         if (isnullallowed)
             _defaultvalue = () => null;
         else

@@ -6,6 +6,7 @@ public interface ITypeProxy
 {
     Type Type { get; }
     public string Name => Type.Name;
+    string FriendlyName { get; }
     ITypeProxy? BaseType { get; }
     bool IsNullAllowed { get; }
     bool IsBasicValueType { get; }

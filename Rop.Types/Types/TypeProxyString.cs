@@ -5,6 +5,7 @@ namespace Rop.Types.Types;
 public class TypeProxyString : AbsTypeProxy
 {
     public override Type Type { get; }
+    public override string FriendlyName { get; }
     public override ITypeProxy? BaseType => null;
     public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
@@ -27,6 +28,7 @@ public class TypeProxyString : AbsTypeProxy
         TypeCode = typeCode;
         _defaultvalue = isnullallowed ? null : "";
         IsNullAllowed = isnullallowed;
+        FriendlyName = type.Name;
     }
     public override string ToString() => (BaseType == null) ? $"{Type.Name}{(IsNullAllowed ? "(?)" : "")}" : $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

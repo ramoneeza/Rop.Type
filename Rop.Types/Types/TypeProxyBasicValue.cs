@@ -2,6 +2,7 @@
 
 public class TypeProxyBasicValue : AbsTypeProxy
 {
+    public override string FriendlyName { get; }
     public override Type Type { get; }
     public override ITypeProxy? BaseType => null;
     public override bool IsNullAllowed => false;
@@ -22,6 +23,7 @@ public class TypeProxyBasicValue : AbsTypeProxy
         Type = type;
         TypeCode = Type.GetTypeCode(type);
         _defaultvalue = Activator.CreateInstance(type)!;
+        FriendlyName = type.Name;
     }
 
     public override string ToString() => $"{Type.Name}";

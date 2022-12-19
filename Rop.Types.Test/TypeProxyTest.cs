@@ -59,6 +59,7 @@ namespace Rop.Types.Test
             Assert.Equal(typeof(int), a.BaseType?.Type);
             Assert.Equal(typeof(int?), a.Type);
             Assert.Equal("Nullable`1", a.Name);
+            Assert.Equal("Int32?", a.FriendlyName);
             Assert.Equal(TypeCode.Object, a.TypeCode);
             Assert.Null(a.GetDefaultValue());
         }

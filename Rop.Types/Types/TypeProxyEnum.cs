@@ -3,6 +3,7 @@
 public class TypeProxyEnum : AbsTypeProxy
 {
     public override Type Type { get; }
+    public override string FriendlyName { get; }
     public override ITypeProxy BaseType { get; }
     public override bool IsNullAllowed => false;
     public override bool IsBasicValueType => false;
@@ -25,6 +26,7 @@ public class TypeProxyEnum : AbsTypeProxy
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(subtype);
         _defaultvalue = Activator.CreateInstance(type)!;
+        FriendlyName = type.Name;
     }
     public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

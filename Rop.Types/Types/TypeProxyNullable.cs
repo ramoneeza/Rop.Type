@@ -3,7 +3,8 @@
 public class TypeProxyNullable : AbsTypeProxy
 {
     public override Type Type { get; }
-    public override ITypeProxy BaseType { get; }
+    public override string FriendlyName { get; }
+    public sealed override ITypeProxy BaseType { get; }
     public override bool IsNullAllowed => true;
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
@@ -23,6 +24,7 @@ public class TypeProxyNullable : AbsTypeProxy
         Type = type;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(subtype);
+        FriendlyName = BaseType.FriendlyName + "?";
     }
     public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

@@ -9,6 +9,7 @@ namespace Rop.Types.Types
     public abstract class AbsTypeProxy:ITypeProxy,IEquatable<ITypeProxy>
     {
         public abstract Type Type { get; }
+        public abstract string FriendlyName { get; }
         public abstract ITypeProxy? BaseType { get; }
         public abstract bool IsNullAllowed { get; }
         public abstract bool IsBasicValueType { get; }

@@ -3,6 +3,7 @@
 public class TypeProxyEnumerable : AbsTypeProxy
 {
     public override Type Type { get; }
+    public override string FriendlyName { get; }
     public override ITypeProxy BaseType { get; }
     public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
@@ -24,6 +25,7 @@ public class TypeProxyEnumerable : AbsTypeProxy
         var lst = type.HasGenericInterface(typeof(IEnumerable<>));
         var baseType = lst ?? throw new ArgumentException($"Type {type} is not a IEnumerable<>");
         Type = type;
+        FriendlyName = type.Name;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(baseType);
         IsNullAllowed = isnullallowed;
