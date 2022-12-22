@@ -2,10 +2,7 @@
 
 public class TypeProxyBasicValue : AbsTypeProxy
 {
-    public override string FriendlyName { get; }
-    public override Type Type { get; }
     public override ITypeProxy? BaseType => null;
-    public override bool IsNullAllowed => false;
     public override bool IsBasicValueType => true;
     public override bool IsArray => false;
     public override bool IsNullable => false;
@@ -18,13 +15,9 @@ public class TypeProxyBasicValue : AbsTypeProxy
     public override TypeType TypeType => TypeType.BasicValue;
     private readonly object _defaultvalue;
     public override object? GetDefaultValue() => _defaultvalue;
-    public TypeProxyBasicValue(Type type, bool isnullallowed)
+    public TypeProxyBasicValue(Type type, bool isnullallowed):base(type,false)
     {
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         _defaultvalue = Activator.CreateInstance(type)!;
-        FriendlyName = type.Name;
     }
-
-    public override string ToString() => $"{Type.Name}";
 }

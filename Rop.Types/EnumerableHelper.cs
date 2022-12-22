@@ -7,24 +7,33 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Rop.Types.Generics;
 
 namespace Rop.Types
 {
     public static class EnumerableHelper
     {
+        #region private section
         private static readonly ConcurrentDictionary<RuntimeTypeHandle,Func<IEnumerable,object>> _dictoarray =new();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, Func<IEnumerable, object>> _dictolist = new();
-
-        public static object CastToArray(IEnumerable e,Type t)
+        private static Func<IEnumerable, object> _makeenumerablefn(Type t,string method)
         {
-            var fn = GetCastArray(t);
-            return fn(e);
+            var ie =GenericHelper.GetGenericType(typeof(IEnumerable<>),t);
+            var obj = Expression.Parameter(typeof(object), "obj");
+            var cvt= Expression.Convert(obj, ie);
+            var body = Expression.Call(typeof(Enumerable),method,new []{t},cvt);
+            var lambda = Expression.Lambda<Func<IEnumerable,object>>(body,obj);
+            return lambda.Compile();
         }
 
-        public static object CastToList(IEnumerable e, Type t)
+        private static Func<IEnumerable, object> GetCastList(Type t)
         {
-            var fn = GetCastList(t);
-            return fn(e);
+            if (!_dictolist.TryGetValue(t.TypeHandle, out var te))
+            {
+                te = _makeenumerablefn(t, "ToList");
+                _dictolist[t.TypeHandle] = te;
+            }
+            return te;
         }
         private static Func<IEnumerable,object> GetCastArray(Type t)
         {
@@ -35,25 +44,18 @@ namespace Rop.Types
             }
             return te;
         }
-        private static Func<IEnumerable, object> GetCastList(Type t)
+        #endregion
+        // Cast an Enumerable<T> to an Array<T>
+        public static object CastToArray(IEnumerable e,Type t)
         {
-            if (!_dictolist.TryGetValue(t.TypeHandle, out var te))
-            {
-                te = _makeenumerablefn(t, "ToList");
-                _dictolist[t.TypeHandle] = te;
-            }
-            return te;
+            var fn = GetCastArray(t);
+            return fn(e);
         }
-        
-        private static Func<IEnumerable, object> _makeenumerablefn(Type t,string method)
+        // Cast an Enumerable<T> to a List<T>
+        public static object CastToList(IEnumerable e, Type t)
         {
-            var ie =GenericHelper.GetGenericType(typeof(IEnumerable<>),t);
-            var obj = Expression.Parameter(typeof(object), "obj");
-            var cvt= Expression.Convert(obj, ie);
-            var body = Expression.Call(typeof(Enumerable),method,new []{t},cvt);
-            var lambda = Expression.Lambda<Func<IEnumerable,object>>(body,obj);
-            return lambda.Compile();
+            var fn = GetCastList(t);
+            return fn(e);
         }
-        
     }
 }

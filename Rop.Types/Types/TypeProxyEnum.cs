@@ -2,10 +2,7 @@
 
 public class TypeProxyEnum : AbsTypeProxy
 {
-    public override Type Type { get; }
-    public override string FriendlyName { get; }
     public override ITypeProxy BaseType { get; }
-    public override bool IsNullAllowed => false;
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
     public override bool IsNullable => false;
@@ -18,15 +15,12 @@ public class TypeProxyEnum : AbsTypeProxy
     public override TypeType TypeType => TypeType.Enum;
     private readonly object _defaultvalue;
     public override object? GetDefaultValue() => _defaultvalue;
-    public TypeProxyEnum(Type type, bool isnullallowed)
+    public TypeProxyEnum(Type type, bool isnullallowed):base(type,false)
     {
         var subtype = type.GetEnumUnderlyingType();
         if (subtype is null) throw new ArgumentException($"Type {type} is not Enum");
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(subtype);
         _defaultvalue = Activator.CreateInstance(type)!;
-        FriendlyName = type.Name;
     }
-    public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

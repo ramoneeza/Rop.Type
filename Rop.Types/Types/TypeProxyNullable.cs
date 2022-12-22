@@ -2,10 +2,7 @@
 
 public class TypeProxyNullable : AbsTypeProxy
 {
-    public override Type Type { get; }
-    public override string FriendlyName { get; }
     public sealed override ITypeProxy BaseType { get; }
-    public override bool IsNullAllowed => true;
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
     public override bool IsNullable => true;
@@ -16,15 +13,14 @@ public class TypeProxyNullable : AbsTypeProxy
     public override bool HasEmptyConstructor => true;
     public override TypeCode TypeCode { get; }
     public override TypeType TypeType => TypeType.Nullable;
+    
     public override object? GetDefaultValue() => null;
-    public TypeProxyNullable(Type type, bool isnullallowed)
+    public TypeProxyNullable(Type type, bool isnullallowed):base(type, true)
     {
         var subtype = Nullable.GetUnderlyingType(type);
         if (subtype is null) throw new ArgumentException($"Type {type} is not Nullable<>");
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(subtype);
-        FriendlyName = BaseType.FriendlyName + "?";
     }
-    public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
+    public override string ToString() => $"{FriendlyName}";
 }

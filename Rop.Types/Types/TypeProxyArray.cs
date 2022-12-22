@@ -2,10 +2,7 @@
 
 public class TypeProxyArray : AbsTypeProxy
 {
-    public override Type Type { get; }
     public sealed override ITypeProxy BaseType { get; }
-    public override string FriendlyName { get; }
-    public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
     public override bool IsArray => true;
     public override bool IsNullable => false;
@@ -18,18 +15,12 @@ public class TypeProxyArray : AbsTypeProxy
     public override TypeType TypeType => TypeType.Array;
     private readonly object? _defaultvalue;
     public override object? GetDefaultValue() => IsNullAllowed ? null : Array.CreateInstance(BaseType.Type, 0);
-    public TypeProxyArray(Type type, bool isnullallowed)
+    public TypeProxyArray(Type type, bool isnullallowed):base(type,isnullallowed)
     {
         if (!type.IsArray) throw new ArgumentException($"Type {type} is not Array");
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         var baseType = type.GetElementType()!;
         BaseType = TypeProxy.Get(baseType);
-        IsNullAllowed = isnullallowed;
         _defaultvalue = isnullallowed ? null : Array.CreateInstance(baseType, 0);
-        FriendlyName = BaseType.FriendlyName + "[]";
-
     }
-    public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
-
 }

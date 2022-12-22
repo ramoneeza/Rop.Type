@@ -17,9 +17,10 @@ namespace Rop.Types
             var typecode = Type.GetTypeCode(type);
             if (typecode == TypeCode.String) return new TypeProxyString(type, isnullallowed);
             if (type.IsArray) return new TypeProxyArray(type, isnullallowed);
-            if (type.ImplementsGenericInterface(typeof(IReadOnlyList<>))||
-                type.ImplementsGenericInterface(typeof(IList<>))) return new TypeProxyList(type, isnullallowed);
-            if (type.ImplementsGenericInterface(typeof(IEnumerable<>))) return new TypeProxyEnumerable(type, isnullallowed);
+            if (type.ImplementsGenericInterface(typeof(IReadOnlyList<>))|| type.ImplementsGenericInterface(typeof(IList<>))) 
+                return new TypeProxyList(type, isnullallowed);
+            if (type.ImplementsGenericInterface(typeof(IEnumerable<>))) 
+                return new TypeProxyEnumerable(type, isnullallowed);
             if (typecode != TypeCode.Object) throw new ArgumentException($"TypeType of {type} is unknown");
             return new TypeProxyObject(type, isnullallowed);
         }

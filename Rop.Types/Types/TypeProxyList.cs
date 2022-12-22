@@ -2,10 +2,7 @@
 
 public class TypeProxyList : AbsTypeProxy
 {
-    public override Type Type { get; }
-    public override string FriendlyName { get; }
     public sealed override ITypeProxy BaseType { get; }
-    public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
     public override bool IsNullable => false;
@@ -18,22 +15,18 @@ public class TypeProxyList : AbsTypeProxy
     public override TypeCode TypeCode { get; }
     public override TypeType TypeType => TypeType.List;
     private readonly Func<object?> _defaultvalue;
-    private readonly Type? _primitivetype=null;
     public override object? GetDefaultValue() => _defaultvalue();
-    public TypeProxyList(Type type, bool isnullallowed)
+    public TypeProxyList(Type type, bool isnullallowed):base(type,isnullallowed) 
     {
         var lst = type.HasGenericInterface(typeof(IList<>));
         var ro = type.HasGenericInterface(typeof(IReadOnlyList<>));
         var baseType = (lst ?? ro) ?? throw new ArgumentException($"Type {type} is not a List");
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(baseType);
         IsReadOnly = lst == null;
-        IsNullAllowed = isnullallowed;
         var hasEmptyConstructor = type.HasDefaultConstructor();
         HasEmptyConstructor = hasEmptyConstructor;
-
-        FriendlyName = (baseType == lst) ? $"List<{BaseType.FriendlyName}>" : $"ReadOnlyList<{BaseType.FriendlyName}>";
+        //FriendlyName = (baseType == lst) ? $"List<{BaseType.FriendlyName}>" : $"ReadOnlyList<{BaseType.FriendlyName}>";
 
 
         if (isnullallowed)
@@ -44,10 +37,10 @@ public class TypeProxyList : AbsTypeProxy
                 _defaultvalue = () => null;
             else
             {
-                _primitivetype = typeof(List<>).MakeGenericType(baseType);
-                _defaultvalue = () => Activator.CreateInstance(_primitivetype);
+                var primitivetype = typeof(List<>).MakeGenericType(baseType);
+                _defaultvalue = () => Activator.CreateInstance(primitivetype);
             }
         }
     }
-    public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
+  
 }

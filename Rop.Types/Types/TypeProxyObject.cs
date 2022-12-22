@@ -2,9 +2,7 @@
 
 public class TypeProxyObject : AbsTypeProxy
 {
-    public override Type Type { get; }
     public override ITypeProxy? BaseType => null;
-    public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
     public override bool IsNullable => false;
@@ -17,15 +15,12 @@ public class TypeProxyObject : AbsTypeProxy
     public override TypeType TypeType => TypeType.Object;
     private readonly Func<object?> _defaultvalue;
     public override object? GetDefaultValue() => _defaultvalue();
-    public override string FriendlyName { get; }
-
-    public TypeProxyObject(Type type, bool isnullallowed)
+    
+    public TypeProxyObject(Type type, bool isnullallowed):base(type, isnullallowed)
     {
-        Type = type;
         TypeCode = Type.GetTypeCode(type);
         var hasEmptyConstructor = type.HasDefaultConstructor();
         HasEmptyConstructor=hasEmptyConstructor;
-        IsNullAllowed = isnullallowed;
         if (isnullallowed)
             _defaultvalue = () => null;
         else
@@ -37,7 +32,5 @@ public class TypeProxyObject : AbsTypeProxy
                 _defaultvalue = () => null; // Can't do nothing more
             }
         }
-        FriendlyName = Type.Name;
     }
-    public override string ToString() => (BaseType == null) ? $"{Type.Name}{(IsNullAllowed ? "(?)" : "")}" : $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
 }

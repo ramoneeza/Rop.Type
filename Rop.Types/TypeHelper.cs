@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Reflection;
+using System.Text;
 
 namespace Rop.Types
 {
@@ -64,5 +65,58 @@ namespace Rop.Types
                 .Any(x => x.GetTypeInfo().IsGenericType && x.GetGenericTypeDefinition() == interfaceType);
         }
 
+        public static string GetFriendlyName(this Type type)
+        {
+                if (type == typeof(int)) return "int";
+                if (type == typeof(short)) return "short";
+                if (type == typeof(byte)) return "byte";
+                if (type == typeof(bool)) return "bool";
+                if (type == typeof(long)) return "long";
+                if (type == typeof(float)) return "float";
+                if (type == typeof(double)) return "double";
+                if (type == typeof(decimal)) return "decimal";
+                if (type == typeof(string)) return "string";
+                if (type.IsArray)
+                {
+                    var et=type.GetElementType();
+                    return $"{et!.GetFriendlyName()}[]";
+                }
+                if (type.IsGenericType)
+                {
+                    var b=type.GetGenericTypeDefinition();
+                    if (b == typeof(Nullable<>))
+                    {
+                        var bs = type.GetGenericArguments()[0];
+                        return bs.GetFriendlyName() + "?";
+                    }
+
+                    var sb = new StringBuilder();
+                    sb.Append(type.Name.Split('`')[0]);
+                    sb.Append("<");
+                    sb.Append(string.Join(',', type.GetGenericArguments().Select(GetFriendlyName)));
+                    sb.Append(">");
+                    return sb.ToString();
+                }
+                return type.Name;
+        }
+        public static IEnumerable<(IPropertyProxy, object?, object?)> ExtendedComparer(Type t,object obj1, object obj2)
+        {
+            if (!t.IsClass) throw new ArgumentException("Type must be a class");
+            if (obj1.GetType() != t || obj2.GetType() != t) throw new ArgumentException("Objects must by of type T");
+            var props =PropertyProxy.GetPublicProperties(t);
+            foreach (var pp in props)
+            {
+                var v1=pp.GetValue(obj1);
+                var v2=pp.GetValue(obj2);
+                if (!object.Equals(v1, v2))
+                {
+                    yield return (pp,v1, v2);
+                }
+            }
+        }
+        public static IEnumerable<(IPropertyProxy, object?, object?)> ExtendedComparer<T>(T obj1,T obj2) where T : class
+        {
+            return ExtendedComparer(typeof(T), obj1, obj2);
+        }
     }
 }

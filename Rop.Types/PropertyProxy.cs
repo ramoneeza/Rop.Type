@@ -9,6 +9,7 @@ public class PropertyProxy : IPropertyProxy
     // Static
     private static readonly ConcurrentDictionary<PropertyInfo, IPropertyProxy> _dic = new();
     private static readonly ConcurrentDictionary<PropertyKey, IPropertyProxy?> _dicByKey = new();
+    private static readonly ConcurrentDictionary<RuntimeTypeHandle, List<IPropertyProxy>> _dicobject = new();
 
     public static IPropertyProxy Get(PropertyInfo prop)
     {
@@ -31,6 +32,20 @@ public class PropertyProxy : IPropertyProxy
         }
         return Get(prop);
     }
+
+    public static IReadOnlyCollection<IPropertyProxy> GetPublicProperties(Type type)
+    {
+        if (_dicobject.TryGetValue(type.TypeHandle, out var lst)) return lst;
+        lst=new List<IPropertyProxy>();
+        foreach (var propertyInfo in type.GetProperties())
+        {
+            var p = Get(propertyInfo);
+            lst.Add(p);
+        }
+        _dicobject[type.TypeHandle] = lst;
+        return lst;
+    }
+
     private record PropertyKey
     {
         public RuntimeTypeHandle Type { get; }

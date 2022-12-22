@@ -2,10 +2,7 @@
 
 public class TypeProxyEnumerable : AbsTypeProxy
 {
-    public override Type Type { get; }
-    public override string FriendlyName { get; }
     public override ITypeProxy BaseType { get; }
-    public override bool IsNullAllowed { get; }
     public override bool IsBasicValueType => false;
     public override bool IsArray => false;
     public override bool IsNullable => false;
@@ -20,18 +17,14 @@ public class TypeProxyEnumerable : AbsTypeProxy
     private readonly Func<object?> _defaultvalue=()=>null;
     public override object? GetDefaultValue() => _defaultvalue();
 
-    public TypeProxyEnumerable(Type type, bool isnullallowed)
+    public TypeProxyEnumerable(Type type, bool isnullallowed):base(type,isnullallowed)
     {
         var lst = type.HasGenericInterface(typeof(IEnumerable<>));
         var baseType = lst ?? throw new ArgumentException($"Type {type} is not a IEnumerable<>");
-        Type = type;
-        FriendlyName = type.Name;
         TypeCode = Type.GetTypeCode(type);
         BaseType = TypeProxy.Get(baseType);
-        IsNullAllowed = isnullallowed;
         var hasemptyconstructor= type.HasDefaultConstructor();
         HasEmptyConstructor = hasemptyconstructor;
-
         if (!isnullallowed)
         {
             if (hasemptyconstructor)
@@ -43,5 +36,5 @@ public class TypeProxyEnumerable : AbsTypeProxy
             }
         } 
     }
-    public override string ToString() => $"{Type.Name}({BaseType.Name}){(IsNullAllowed ? "(?)" : "")}";
+   
 }
