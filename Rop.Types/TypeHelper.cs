@@ -101,9 +101,9 @@ namespace Rop.Types
         }
         public static IEnumerable<(IPropertyProxy, object?, object?)> ExtendedComparer(Type t,object obj1, object obj2)
         {
-            if (!t.IsClass) throw new ArgumentException("Type must be a class");
+            var cp = ClassProxy.Get(t);
             if (obj1.GetType() != t || obj2.GetType() != t) throw new ArgumentException("Objects must by of type T");
-            var props =PropertyProxy.GetPublicProperties(t);
+            var props =cp.GetPublicProperties();
             foreach (var pp in props)
             {
                 var v1=pp.GetValue(obj1);
