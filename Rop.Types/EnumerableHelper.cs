@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Rop.Types.Generics;
 
 namespace Rop.Types
 {
@@ -18,7 +17,7 @@ namespace Rop.Types
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, Func<IEnumerable, object>> _dictolist = new();
         private static Func<IEnumerable, object> _makeenumerablefn(Type t,string method)
         {
-            var ie =GenericHelper.GetGenericType(typeof(IEnumerable<>),t);
+            var ie =typeof(IEnumerable<>).MakeGenericType(t);
             var obj = Expression.Parameter(typeof(object), "obj");
             var cvt= Expression.Convert(obj, ie);
             var body = Expression.Call(typeof(Enumerable),method,new []{t},cvt);
