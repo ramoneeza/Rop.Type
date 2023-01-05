@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 using System.Text;
+using Rop.Types.Proxies;
 
 namespace Rop.Types
 {
@@ -46,6 +47,15 @@ namespace Rop.Types
                 .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericinterface);
             return ie?.GetGenericArguments()[0];
         }
+        public static (Type,Type)? HasGenericInterface2(this Type type, Type genericinterface)
+        {
+            var ie=type.GetInterfaces()
+                .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericinterface);
+            var a = ie?.GetGenericArguments();
+            if (a is null || a.Length != 2) return null;
+            return (a[0],a[1]);
+        }
+
 
         public static bool IsIEnumerableOfT(this Type type,out Type? subtype)
         {

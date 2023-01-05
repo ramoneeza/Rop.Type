@@ -2,26 +2,23 @@
 
 namespace Rop.Types.Types;
 
-public class TypeProxyString : AbsTypeProxy
+internal class TypeProxyString : AbsTypeProxy,ITypeProxyString
 {
     public override ITypeProxy? BaseType => null;
-    public override bool IsBasicValueType => false;
-    public override bool IsArray => false;
-    public override bool IsNullable => false;
-    public override bool IsList => false;
-    public override bool IsEnumerable => false;
-    public override bool IsEnum => false;
-    public override bool IsString => true;
     public override bool HasEmptyConstructor => true;
-    public override TypeCode TypeCode { get; }
-    public override TypeType TypeType => TypeType.String;
-    private readonly object? _defaultvalue;
-    public override object? GetDefaultValue() => _defaultvalue;
-    public TypeProxyString(Type type, bool isnullallowed):base(type,isnullallowed)
+    protected override Func<object?> DefaultValue { get; }
+
+    public TypeProxyString(Type type, bool isnullallowed):base(type,TypeType.String,isnullallowed)
     {
         var typeCode = Type.GetTypeCode(type);
         if (typeCode != TypeCode.String) throw new ArgumentException($"Type {type} is not String");
-        TypeCode = typeCode;
-        _defaultvalue = isnullallowed ? null : "";
+        if (isnullallowed)
+            DefaultValue = () => null;
+        else
+            DefaultValue = () => "";
     }
+}
+
+public interface ITypeProxyString:ITypeProxy
+{
 }

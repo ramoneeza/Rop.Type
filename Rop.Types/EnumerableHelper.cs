@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Rop.Types.Types;
 
 namespace Rop.Types
 {
@@ -54,6 +55,22 @@ namespace Rop.Types
         public static object CastToList(IEnumerable e, Type t)
         {
             var fn = GetCastList(t);
+            return fn(e);
+        }
+
+        public static object CastToArray(this IEnumerable e)
+        {
+            var t = TypeProxy.Get(e.GetType()) as ITypeProxyEnumerable;
+            if (t is null || t.BaseType is null) throw new ArgumentException($"{e.GetType()} is not IEnumerable<>");
+            var fn = GetCastArray(t.BaseType.Type);
+            return fn(e);
+        }
+// Cast an Enumerable<T> to a List<T>
+        public static object CastToList(this IEnumerable e)
+        {
+            var t = TypeProxy.Get(e.GetType()) as ITypeProxyEnumerable;
+            if (t is null || t.BaseType is null) throw new ArgumentException($"{e.GetType()} is not IEnumerable<>");
+            var fn = GetCastList(t.BaseType.Type);
             return fn(e);
         }
     }

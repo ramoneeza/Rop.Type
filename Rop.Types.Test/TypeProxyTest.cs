@@ -1,4 +1,5 @@
 using System.Collections;
+using Rop.Types.Types;
 
 namespace Rop.Types.Test
 {
@@ -23,6 +24,34 @@ namespace Rop.Types.Test
             Assert.Equal(TypeCode.Boolean,a.TypeCode);
             Assert.Equal(false,a.GetDefaultValue());
         }
+
+        [Fact]
+        public void TestDictionaryValue()
+        {
+            var a = TypeProxy.Get(typeof(Dictionary<string,int>));
+            Assert.True(a.HasEmptyConstructor);
+            Assert.False(a.IsArray);
+            Assert.False(a.IsBasicValueType);
+            Assert.False(a.IsEnum);
+            Assert.False(a.IsEnumerable);
+            Assert.False(a.IsList);
+            Assert.True(a.IsNullAllowed);
+            Assert.False(a.IsNullable);
+            Assert.False(a.IsString);
+            Assert.True(a.IsDictionary);
+            var ad = a as ITypeProxyDictionary;
+            Assert.NotNull(ad);
+            
+            Assert.Equal(typeof(string),ad.DicKeyType.Type);
+            Assert.Equal(typeof(int),ad.DicValueType.Type);
+
+            Assert.Null(a.BaseType);
+
+            Assert.Equal(typeof(Dictionary<string,int>),a.Type);
+            Assert.Equal(TypeCode.Object,a.TypeCode);
+            Assert.Equal(null,a.GetDefaultValue());
+        }
+
 
         [Fact]
         public void TestEnumValue()
@@ -135,6 +164,83 @@ namespace Rop.Types.Test
             Assert.Null(a.GetDefaultValue());
         }
 
+        [Fact]
+        public void TestGenericValue()
+        {
+            var a = TypeProxy.Get(typeof(EqualityComparer<int>));
+            Assert.False(a.HasEmptyConstructor);
+            Assert.False(a.IsArray);
+            Assert.False(a.IsBasicValueType);
+            Assert.False(a.IsEnum);
+            Assert.False(a.IsEnumerable);
+            Assert.False(a.IsList);
+            Assert.True(a.IsNullAllowed);
+            Assert.False(a.IsNullable);
+            Assert.False(a.IsString);
+            Assert.Equal(typeof(int), a.BaseType?.Type);
+            Assert.Equal(typeof(EqualityComparer<int>), a.Type);
+            Assert.Null(a.GetDefaultValue());
+            var asg = a as ITypeProxySingleGeneric;
+            Assert.NotNull(asg);
+            var ag = a as ITypeProxyGeneric;
+            Assert.NotNull(ag);
+
+        }
+
+        [Fact]
+        public void TestMultiGenericValue()
+        {
+            var a = TypeProxy.Get(typeof(Action<string,int>));
+            Assert.False(a.HasEmptyConstructor);
+            Assert.False(a.IsArray);
+            Assert.False(a.IsBasicValueType);
+            Assert.False(a.IsEnum);
+            Assert.False(a.IsEnumerable);
+            Assert.False(a.IsList);
+            Assert.True(a.IsNullAllowed);
+            Assert.False(a.IsNullable);
+            Assert.False(a.IsString);
+            Assert.Null(a.BaseType);
+            Assert.Equal(typeof(Action<string,int>), a.Type);
+            Assert.Null(a.GetDefaultValue());
+            var asg = a as ITypeProxyMultiGeneric;
+            Assert.NotNull(asg);
+            var ag = a as ITypeProxyGeneric;
+            Assert.NotNull(ag);
+
+            Assert.Equal(new[]{typeof(string),typeof(int)},asg.GenericArguments);
+
+        }
+
+        private struct MyStruct
+        {
+            public string a { get; }
+            public string b { get; }
+        }
+
+        [Fact]
+        public void TestStructValue()
+        {
+            var a = TypeProxy.Get(typeof(MyStruct));
+            Assert.True(a.HasEmptyConstructor);
+            Assert.False(a.IsArray);
+            Assert.False(a.IsBasicValueType);
+            Assert.False(a.IsEnum);
+            Assert.False(a.IsEnumerable);
+            Assert.False(a.IsList);
+            Assert.False(a.IsNullAllowed);
+            Assert.False(a.IsNullable);
+            Assert.False(a.IsString);
+            Assert.True(a.IsStruct);
+            Assert.Null(a.BaseType);
+            Assert.Equal(typeof(MyStruct), a.Type);
+            Assert.Equal(new MyStruct(),a.GetDefaultValue());
+            var ag = a as ITypeProxyStruct;
+            Assert.NotNull(ag);
+            
+        }
+
+
 
         [Fact]
         public void TestToArray()
@@ -156,6 +262,23 @@ namespace Rop.Types.Test
             var finalcast =(List<int>)final;
             Assert.Equal(a, finalcast.ToList());
         }
-
+        [Fact]
+        public void TestToArray2()
+        {
+            var a = new List<int>(){1, 2, 3, 4, 5};
+            object final = a.CastToArray();
+            Assert.IsType<int[]>(final);
+            var finalcast = (int[]) final;
+            Assert.Equal(a,finalcast.ToList());
+        }
+        [Fact]
+        public void TestToList2()
+        {
+            var a = new List<int>() { 1, 2, 3, 4, 5 };
+            object final = a.CastToList();
+            Assert.IsType<List<int>>(final);
+            var finalcast =(List<int>)final;
+            Assert.Equal(a, finalcast.ToList());
+        }
     }
 }
