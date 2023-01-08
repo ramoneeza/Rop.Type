@@ -20,7 +20,7 @@ public class SimpleMethodProxy :ISimpleMethodProxy
 {
     // Static
     private static readonly ConcurrentDictionary<MethodInfo, ISimpleMethodProxy> _dic = new();
-    private static readonly ConcurrentDictionary<MethodKey, ISimpleMethodProxy?> _dicByKey = new();
+    private static readonly ConcurrentDictionary< MethodKey, ISimpleMethodProxy?> _dicByKey = new();
 
     public static ISimpleMethodProxy Get(MethodInfo prop)
     {
