@@ -3,11 +3,22 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+/* Cambio no fusionado mediante combinación del proyecto 'Rop.Types (net6.0)'
+Antes:
+using System.Threading.Tasks;
+Después:
+using System.Threading.Tasks;
+using Rop;
+using Rop.Types;
+using Rop.Types;
+using Rop.Types.Proxies;
+*/
 using System.Threading.Tasks;
 
-namespace Rop.Types.Proxies
+namespace Rop.Types
 {
-    internal class ClassProxy : IClassProxy
+    public class ClassProxy : IClassProxy
     {
         public ITypeProxy Type { get; }
         public RuntimeTypeHandle TypeHandle => Type.Type.TypeHandle;

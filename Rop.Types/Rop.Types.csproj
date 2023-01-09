@@ -9,7 +9,7 @@
 	  <PackageTags>type;helpers</PackageTags>
 	  <Description>Type and Properties Helper</Description>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <Version>1.0.13</Version>
+	  <Version>1.0.14</Version>
 	  <Authors>Ramon Ordiales Plaza</Authors>
 	  <Company>Ramon Ordiales Plaza</Company>
 	  <Copyright>2022 Ramon Ordiales</Copyright>
