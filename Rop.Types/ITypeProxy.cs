@@ -24,6 +24,7 @@ public interface ITypeProxy:IEquatable<ITypeProxy>
      bool IsNullable{get;}
      bool IsString{get;}
      bool IsArray{get;}
+     bool IsByteArray { get; }
      bool IsList{get;}
      bool IsDictionary{get;}
      bool IsBasicEnumerable{get;}

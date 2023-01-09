@@ -24,6 +24,7 @@ namespace Rop.Types.Types
         public virtual bool IsNullable{get;}
         public virtual bool IsString{get;}
         public virtual bool IsArray{get;}
+        public bool IsByteArray => IsArray && BaseType?.TypeCode == TypeCode.Byte;
         public virtual bool IsList{get;}
         public virtual bool IsDictionary{get;}
         public virtual bool IsBasicEnumerable{get;}
