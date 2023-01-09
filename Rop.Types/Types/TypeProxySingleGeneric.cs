@@ -1,4 +1,6 @@
-﻿namespace Rop.Types.Types;
+﻿using System;
+
+namespace Rop.Types.Types;
 
 internal class TypeProxySingleGeneric : TypeProxyObject,ITypeProxySingleGeneric
 {

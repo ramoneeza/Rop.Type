@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Rop.Types.Proxies;
@@ -103,7 +106,7 @@ namespace Rop.Types
                     var sb = new StringBuilder();
                     sb.Append(type.Name.Split('`')[0]);
                     sb.Append("<");
-                    sb.Append(string.Join(',', type.GetGenericArguments().Select(GetFriendlyName)));
+                    sb.Append(string.Join(",", type.GetGenericArguments().Select(GetFriendlyName)));
                     sb.Append(">");
                     return sb.ToString();
                 }

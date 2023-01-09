@@ -47,7 +47,11 @@ namespace Rop.Types.Types
             IsNullAllowed = isNullAllowed;
             TypeCode = Type.GetTypeCode(type);
             FriendlyName = type.GetFriendlyName();
+            #if NET6_0
             _hashcode=HashCode.Combine(Type, IsNullAllowed);
+#else
+            _hashcode=Type.GetHashCode()*2+(IsNullAllowed?1:0);
+            #endif
 
             IsBasicValueType = typetype.IsBasicValueType();
             IsEnum = typetype.IsEnum();

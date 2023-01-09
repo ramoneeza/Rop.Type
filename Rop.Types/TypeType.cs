@@ -1,4 +1,7 @@
-﻿namespace Rop.Types;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Rop.Types;
 
 public enum TypeType
 {

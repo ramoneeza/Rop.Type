@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net6.0;net472</TargetFrameworks>
+	  <LangVersion>10.0</LangVersion>
+	  <ImplicitUsings>disable</ImplicitUsings>
+      <Nullable>enable</Nullable>
 	  <PackageId>Rop.TypeProxy</PackageId>
 	  <PackageTags>type;helpers</PackageTags>
 	  <Description>Type and Properties Helper</Description>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <Version>1.0.12</Version>
+	  <Version>1.0.13</Version>
 	  <Authors>Ramon Ordiales Plaza</Authors>
 	  <Company>Ramon Ordiales Plaza</Company>
 	  <Copyright>2022 Ramon Ordiales</Copyright>

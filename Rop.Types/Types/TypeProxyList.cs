@@ -1,4 +1,7 @@
-﻿namespace Rop.Types.Types;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Rop.Types.Types;
 
 internal class TypeProxyList : AbsTypeProxy,ITypeProxyList
 {
