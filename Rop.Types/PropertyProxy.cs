@@ -142,4 +142,18 @@ public class PropertyProxy : IPropertyProxy
     {
         return $"{PropertyInfo.Name}:{PropertyType}";
     }
+
+    public T? FindAtt<T>(Func<T, bool> func) where T : Attribute
+    {
+        return Attributes.OfType<T>().FirstOrDefault(func);
+    }
+    public T? FindAtt<T>() where T : Attribute
+    {
+        return Attributes.OfType<T>().FirstOrDefault();
+    }
+    public bool HasAtt<T>(out T? o) where T : Attribute
+    {
+        o = FindAtt<T>();
+        return o is not null;
+    }
 }

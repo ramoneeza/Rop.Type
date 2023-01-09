@@ -37,5 +37,6 @@ public interface ITypeProxy:IEquatable<ITypeProxy>
      bool IsGeneric{get;}
      bool IsBasicGeneric{get;}
 
-    
+     
+
 }

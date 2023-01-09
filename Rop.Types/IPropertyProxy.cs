@@ -18,4 +18,8 @@ public interface IPropertyProxy:IEquatable<IPropertyProxy>
     MethodInfo? Setter { get; }
     object? GetValue(object item);
     void SetValue(object item, object? value);
+
+    T? FindAtt<T>(Func<T, bool> func) where T : Attribute;
+    T? FindAtt<T>() where T : Attribute;
+    bool HasAtt<T>(out T? o) where T : Attribute;
 }
